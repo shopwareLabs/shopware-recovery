@@ -1,1 +1,24 @@
-HELLO FROM TWIG
+<button id="start">Press me to Install Shopware 6</button>
+
+<pre id="output">
+
+</pre>
+
+<script>
+    document.getElementById('start').onclick = function () {
+        const decoder = new TextDecoder();
+        fetch('/shopware-recovery.phar.php/install')
+            .then(async (response) => {
+                const reader = response.body.getReader();
+
+                while (true) {
+                    const {value, done} = await reader.read();
+                    if (done) break;
+
+                    const text = decoder.decode(value);
+
+                    document.getElementById('output').innerHTML += text;
+                }
+            })
+    }
+</script>
