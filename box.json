@@ -1,0 +1,14 @@
+{
+    "stub": "stub.php",
+    "main": false,
+    "directories": ["bin", "src", "public"],
+    "finder": [
+        {
+            "name": "*",
+            "exclude": ["Tests", "tests", "doc", "docs"],
+            "in": "vendor"
+        }
+    ],
+    "git-version": "package_version",
+    "output": "shopware-recovery.phar"
+}

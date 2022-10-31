@@ -1,0 +1,9 @@
+tasks:
+  - name: Install
+    init: |
+      composer install
+
+vscode:
+  extensions:
+    - bmewburn.vscode-intelephense-client
+    - redhat.vscode-yaml
