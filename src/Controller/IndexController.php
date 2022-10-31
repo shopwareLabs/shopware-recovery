@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
-use Symfony\Component\Routing\Route;
-use Symfony\Flex\Response;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController
 {
-    #[Route('/', name: 'index')]
+    #[Route('/')]
     public function index(): Response
     {
         return new Response('Hello World!');

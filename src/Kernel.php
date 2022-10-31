@@ -20,26 +20,29 @@ class Kernel extends BaseKernel
         ];
     }
 
-    public function getRootDir(): string
+    public function getProjectDir(): string
     {
         return __DIR__;
     }
+
+    public function getLogDir(): string
+    {
+        return $this->getCacheDir();
+    }
+
 
     public function getCacheDir(): string
     {
         return sys_get_temp_dir() . '/shopware-recovery/';
     }
 
-    protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader): void
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
+        $loader->load(__DIR__.'/Resources/config/config.yml');
     }
 
-    /**
-     * @param App\RouteCollectionBuilder $routes 
-     * @return void 
-     */
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import(__DIR__.'/Controller', '/', 'annotation');
+        $routes->import(__DIR__.'/Controller');
     }
 }

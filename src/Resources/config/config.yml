@@ -1,0 +1,6 @@
+imports:
+  - { resource: services.yml }
+
+framework:
+  secret: ''
+  default_locale: en
