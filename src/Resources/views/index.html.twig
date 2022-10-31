@@ -20,7 +20,9 @@
 
     <script>
         const output = document.getElementById('output');
-        document.getElementById('start').onclick = function () {
+        const startButton = document.getElementById('start');
+        startButton.onclick = function () {
+            startButton.disabled = true;
             const decoder = new TextDecoder();
             fetch('/shopware-recovery.phar.php/install')
                 .then(async (response) => {
