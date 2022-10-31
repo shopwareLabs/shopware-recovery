@@ -10,10 +10,13 @@
         "symfony/console": "6.2.*",
         "symfony/dotenv": "6.2.*",
         "symfony/framework-bundle": "6.2.*",
-        "symfony/yaml": "6.2.*"
+        "symfony/twig-bundle": "^6.1",
+        "symfony/yaml": "6.2.*",
+        "twig/twig": "^3.4"
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.47"
+        "symfony/maker-bundle": "^1.47",
+        "symplify/easy-coding-standard": "^11.1"
     },
     "config": {
         "allow-plugins": {

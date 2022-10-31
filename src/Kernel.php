@@ -4,6 +4,7 @@ namespace App;
 
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
@@ -17,6 +18,7 @@ class Kernel extends BaseKernel
     {
         return [
             new FrameworkBundle(),
+            new TwigBundle(),
         ];
     }
 
@@ -38,11 +40,11 @@ class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
-        $loader->load(__DIR__.'/Resources/config/config.yml');
+        $loader->load(__DIR__ . '/Resources/config/config.yml');
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import(__DIR__.'/Controller');
+        $routes->import(__DIR__ . '/Controller');
     }
 }

@@ -4,3 +4,7 @@ imports:
 framework:
   secret: ''
   default_locale: en
+
+twig:
+  cache: false
+  default_path: '%kernel.project_dir%/Resources/views'

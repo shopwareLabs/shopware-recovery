@@ -20,24 +20,34 @@ if ('cli' === PHP_SAPI || !isset($_SERVER['REQUEST_URI'])) {
     Phar::mapPhar('shopware-recovery.phar');
     require 'phar://shopware-recovery.phar/bin/console';
 } else {
-    function rewrites()
+    function rewrites(): bool|string
     {
-        return false;
+        [,$url] = explode(basename(__FILE__), $_SERVER['REQUEST_URI'], 2);
+
+        if (strpos($url, '..')) {
+            return false;
+        }
+
+        if (!empty($url) && is_file('phar://' . __FILE__ . '/public/' . $url)) {
+            return '/public' . $url;
+        }
+
+        return 'index.php';
     }
 
     Phar::webPhar(
         null,
-        'public/index.php',
+        'index.php',
         null,
-        array(
+        [
             'php' => Phar::PHP,
             'css' => 'text/css',
             'js' => 'application/x-javascript',
             'png' => 'image/png',
             'svg' => 'image/svg+xml',
             'json' => 'application/json'
-        ),
-        'rewrites'
+        ],
+        'rewrites',
     );
 }
 

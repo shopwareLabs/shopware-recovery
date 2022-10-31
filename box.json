@@ -1,7 +1,8 @@
 {
     "stub": "stub.php",
     "main": false,
-    "directories": ["bin", "src", "public"],
+    "files": ["index.php"],
+    "directories": ["bin", "src", "public/assets"],
     "finder": [
         {
             "name": "*",
