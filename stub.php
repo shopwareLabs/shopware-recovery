@@ -18,7 +18,18 @@ if (function_exists('date_default_timezone_set') && function_exists('date_defaul
 
 if ('cli' === PHP_SAPI || !isset($_SERVER['REQUEST_URI'])) {
     Phar::mapPhar('shopware-recovery.phar');
-    require 'phar://shopware-recovery.phar/bin/console';
+
+    if (($_SERVER['argv'][1] ?? '') === 'composer') {
+        unset($_SERVER['argv'][0]);
+        $_SERVER['argv'] = array_values($_SERVER['argv']);
+
+        $_SERVER['argc'] = count($_SERVER['argv']);
+        $argc = &$_SERVER['argc'];
+        $argv = &$_SERVER['argv'];
+        require 'phar://shopware-recovery.phar/vendor/bin/composer';
+    } else {
+        require 'phar://shopware-recovery.phar/bin/console';
+    }
 } else {
     function rewrites(): bool|string
     {

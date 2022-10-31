@@ -1,24 +1,42 @@
-<button id="start">Press me to Install Shopware 6</button>
+{% extends "base.html.twig" %}
 
-<pre id="output">
+{% block main %}
 
-</pre>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Install Shopware</h5>
 
-<script>
-    document.getElementById('start').onclick = function () {
-        const decoder = new TextDecoder();
-        fetch('/shopware-recovery.phar.php/install')
-            .then(async (response) => {
-                const reader = response.body.getReader();
+            <button class="btn btn-primary" id="start">Install</button>
+        </div>
+    </div>
 
-                while (true) {
-                    const {value, done} = await reader.read();
-                    if (done) break;
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Console</h5>
 
-                    const text = decoder.decode(value);
+            <pre id="output" class="form-control" style="height: 70vh;"></pre>
+        </div>
+    </div>
 
-                    document.getElementById('output').innerHTML += text;
-                }
-            })
-    }
-</script>
+    <script>
+        const output = document.getElementById('output');
+        document.getElementById('start').onclick = function () {
+            const decoder = new TextDecoder();
+            fetch('/shopware-recovery.phar.php/install')
+                .then(async (response) => {
+                    const reader = response.body.getReader();
+
+                    while (true) {
+                        const {value, done} = await reader.read();
+                        if (done) break;
+
+                        const text = decoder.decode(value);
+
+                        output.innerHTML += text;
+
+                        output.scrollTop = output.scrollHeight;
+                    }
+                })
+        }
+    </script>
+{% endblock %}
