@@ -9,7 +9,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 class PhpConfigForcerListener
 {
-    public function __construct(private RouterInterface $router)
+    public function __construct(private readonly RouterInterface $router)
     {
     }
 

@@ -1,0 +1,30 @@
+{% extends "base.html.twig" %}
+
+{% block main %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Shopware Project</h5>
+
+            <p>
+                Found a Shopware Installation at: {{ shopwarePath }}<br>
+                Current Version: {{ currentShopwareVersion }}<br>
+                Is Symfony Flex project: {{ isFlexProject ? 'Yes' : 'No' }}
+            </p>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Update</h5>
+
+            {% if currentShopwareVersion == latestShopwareVersion %}
+                <div class="alert alert-success">
+                    You are up to date!. You should remove the update manager.
+                </div>
+            {% else %}
+
+
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
