@@ -14,6 +14,7 @@ class RecoveryManager
         $projectDir = $this->getProjectDir();
 
         $composerLookups = [
+            dirname($projectDir) . '/composer.json',
             $projectDir . '/composer.json',
             $projectDir . '/shopware/composer.json',
         ];

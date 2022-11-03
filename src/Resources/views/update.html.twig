@@ -15,16 +15,28 @@
 
     <div class="card mt-4">
         <div class="card-body">
-            <h5 class="card-title">Update</h5>
+            <h5 class="card-title">Update to {{ latestShopwareVersion }}</h5>
 
             {% if currentShopwareVersion == latestShopwareVersion %}
                 <div class="alert alert-success">
                     You are up to date!. You should remove the update manager.
                 </div>
             {% else %}
-
-
+                <button class="btn btn-primary" id="update-start">Update Shopware</button>
             {% endif %}
         </div>
     </div>
+
+    <div class="card mt-4" id="update-log-card" style="display: none">
+        <div class="card-body">
+            <h5 class="card-title">Log</h5>
+
+            <pre class="form-control" id="update-log-output" style="height: 60vh"></pre>
+        </div>
+    </div>
+
+    <script>
+        const isFlexProject = {{ isFlexProject ? 'true' : 'false' }};
+    </script>
+
 {% endblock %}
