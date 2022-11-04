@@ -6,7 +6,6 @@ use App\Services\PhpBinaryFinder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PhpConfigController extends AbstractController

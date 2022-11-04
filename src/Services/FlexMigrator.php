@@ -123,7 +123,7 @@ class FlexMigrator
 ###> symfony/lock ###
 # Choose one of the stores below
 # postgresql+advisory://db_user:db_password@localhost/db_name
-LOCK_DSN=semaphore
+LOCK_DSN=flock
 ###< symfony/lock ###
 
 ###> symfony/messenger ###
@@ -176,6 +176,7 @@ EOT;
         $newEnv[] = '# postgresql+advisory://db_user:db_password@localhost/db_name';
         $newEnv[] = $this->pickEnvValue($env, 'LOCK_DSN', 'semaphore');
         $newEnv[] = '###< symfony/lock ###';
+        $newEnv[] = '';
 
         $newEnv[] = '###> symfony/messenger ###';
         $newEnv[] = '# Choose one of the transports below';
@@ -183,6 +184,7 @@ EOT;
         $newEnv[] = '# MESSENGER_TRANSPORT_DSN=amqp://guest:guest@localhost:5672/%2f/messages';
         $newEnv[] = '# MESSENGER_TRANSPORT_DSN=redis://localhost:6379/messages';
         $newEnv[] = '###< symfony/messenger ###';
+        $newEnv[] = '';
 
         $newEnv[] = '###> symfony/mailer ###';
         $newEnv[] = $this->pickEnvValue($env, 'MAILER_URL', 'null://null', 'MAILER_DSN');
@@ -196,6 +198,7 @@ EOT;
         $newEnv[] = $this->pickEnvValue($env, 'BLUE_GREEN_DEPLOYMENT', '0');
         $newEnv[] = $this->pickEnvValue($env, 'DATABASE_URL', 'mysql://root:root@localhost/shopware');
         $newEnv[] = '###< shopware/core ###';
+        $newEnv[] = '';
 
         $newEnv[] = '###> shopware/elasticsearch ###';
         $newEnv[] = $this->pickEnvValue($env, 'SHOPWARE_ES_HOSTS', 'http://localhost:9200', 'OPENSEARCH_URL');
@@ -204,12 +207,14 @@ EOT;
         $newEnv[] = $this->pickEnvValue($env, 'SHOPWARE_ES_INDEX_PREFIX', 'sw');
         $newEnv[] = $this->pickEnvValue($env, 'SHOPWARE_ES_THROW_EXCEPTION', '1');
         $newEnv[] = '###< shopware/elasticsearch ###';
+        $newEnv[] = '';
 
         $newEnv[] = '###> shopware/storefront ###';
         $newEnv[] = $this->pickEnvValue($env, 'STOREFRONT_PROXY_URL', 'http://localhost');
         $newEnv[] = $this->pickEnvValue($env, 'SHOPWARE_HTTP_CACHE_ENABLED', '1');
         $newEnv[] = $this->pickEnvValue($env, 'SHOPWARE_HTTP_DEFAULT_TTL', '7200');
         $newEnv[] = '###< shopware/storefront ###';
+        $newEnv[] = '';
 
         file_put_contents($projectDir . '/.env', implode("\n", array_merge($newEnv, $env)));
     }

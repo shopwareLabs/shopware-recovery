@@ -59,6 +59,14 @@ if (updateButton) {
         updateButton.disabled = true;
         updateLogCard.style.removeProperty('display');
 
+        const prepareUpdate = await fetch(`${baseUrl}/update/_prepare`)
+        if (prepareUpdate.status !== 200) {
+            updateLogOutput.innerHTML += 'Failed to prepare update' + "\n"
+            return;
+        } else {
+            await tailLog(prepareUpdate, updateLogOutput);
+        }
+
         if (!isFlexProject) {
             updateLogOutput.innerHTML += 'Updating to Flex Project' + "\n"
 
@@ -71,14 +79,6 @@ if (updateButton) {
             } else {
                 updateLogOutput.innerHTML += 'Updated to Flex Project' + "\n"
             }
-        }
-        
-        const prepareUpdate = await fetch(`${baseUrl}/update/_prepare`)
-        if (prepareUpdate.status !== 200) {
-            updateLogOutput.innerHTML += 'Failed to prepare update' + "\n"
-            return;
-        } else {
-            await tailLog(prepareUpdate, updateLogOutput);
         }
 
         const updateRun = await fetch(`${baseUrl}/update/_run`);
