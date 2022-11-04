@@ -8,6 +8,13 @@ if (function_exists('ini_set')) {
     @ini_set('opcache.enable_cli', '0');
 }
 
+if (PHP_VERSION_ID < 80100) {
+    echo 'PHP 8.1 is required.';
+
+    http_response_code(500);
+    exit(1);
+}
+
 if (!extension_loaded('Phar')) {
     die('The PHP Phar extension is not enabled.');
 }
