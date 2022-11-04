@@ -10,6 +10,10 @@ class PhpBinaryFinder
 
     public function find(): string
     {
+        if ($hosterSpecificBinary = $this->findHostedSpecificBinary()) {
+            return $hosterSpecificBinary;
+        }
+
         $finder = new ExecutableFinder();
 
         foreach (self::PHP_BINARY_NAMES as $name) {
@@ -37,5 +41,15 @@ class PhpBinaryFinder
         }
 
         return '';
+    }
+
+    private function findHostedSpecificBinary(): ?string
+    {
+        // Profihost
+        if (file_exists('/usr/local/php8.1/bin/php')) {
+            return '/usr/local/php8.1/bin/php';
+        }
+
+        return null;
     }
 }
