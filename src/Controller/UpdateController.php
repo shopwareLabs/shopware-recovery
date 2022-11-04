@@ -18,8 +18,7 @@ class UpdateController extends AbstractController
         private readonly RecoveryManager $recoveryManager,
         private readonly ReleaseInfoProvider $releaseInfoProvider,
         private readonly FlexMigrator $flexMigrator
-    )
-    {
+    ) {
     }
 
     #[Route('/update', name: 'update')]
@@ -79,7 +78,7 @@ class UpdateController extends AbstractController
 
         $process->start();
 
-        return new StreamedResponse(function () use ($process, $request) {
+        return new StreamedResponse(function () use ($process) {
             foreach ($process->getIterator() as $item) {
                 echo $item;
                 flush();
@@ -107,7 +106,7 @@ class UpdateController extends AbstractController
 
         $process = new Process([
             $request->getSession()->get('phpBinary'),
-            $shopwarePath,
+            $shopwarePath . '/bin/console',
             'system:update:prepare',
             '--no-interaction',
         ]);
@@ -142,7 +141,7 @@ class UpdateController extends AbstractController
 
         $process = new Process([
             $request->getSession()->get('phpBinary'),
-            $shopwarePath,
+            $shopwarePath . '/bin/console',
             'system:update:finish',
             '--no-interaction',
         ]);

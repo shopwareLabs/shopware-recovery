@@ -66,6 +66,7 @@ if (updateButton) {
 
             if (migrate.status !== 200) {
                 updateLogOutput.innerHTML += 'Failed to update to Flex Project' + "\n"
+                updateLogCard.innerHTML += await migrate.text();
                 return;
             } else {
                 updateLogOutput.innerHTML += 'Updated to Flex Project' + "\n"
@@ -87,6 +88,7 @@ if (updateButton) {
         const finishUpdate = await fetch(`${baseUrl}/update/_finish`)
         if (finishUpdate.status !== 200) {
             updateLogOutput.innerHTML += 'Failed to prepare update' + "\n"
+            updateLogOutput.innerHTML += await finishUpdate.text();
         } else {
             await tailLog(finishUpdate, updateLogOutput);
         }

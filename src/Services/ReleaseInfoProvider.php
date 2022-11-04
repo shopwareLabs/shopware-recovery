@@ -6,7 +6,7 @@ class ReleaseInfoProvider
 {
     public function fetchLatestRelease(): string
     {
-        $ch = curl_init('https://api.github.com/repos/shopware/platform/releases/latest');
+        $ch = curl_init('https://repo.packagist.org/p2/shopware/core.json');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'User-Agent: Shopware Recovery'
@@ -22,6 +22,10 @@ class ReleaseInfoProvider
 
         $result = json_decode($result, true);
 
-        return ltrim($result['tag_name'], 'v');
+        foreach ($result['packages']['shopware/core'] as $version) {
+            return $version['version'];
+        }
+
+        throw new \RuntimeException('Could not find latest version');
     }
 }
