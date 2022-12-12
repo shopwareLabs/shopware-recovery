@@ -102,7 +102,10 @@ EOT;
         $composerJson = json_decode(file_get_contents($composerJsonPath), true, JSON_THROW_ON_ERROR);
 
         $composerJson['require']['symfony/flex'] = '^2';
-        $composerJson['require']['symfony/runtime'] = '^5.4';
+        $composerJson['require']['symfony/runtime'] = '^5.0|^6.0';
+
+        // Remove old recovery
+        unset($composerJson['require']['shopware/recovery']);
 
         if (!isset($composerJson['config'])) {
             $composerJson['config'] = [];
@@ -141,8 +144,8 @@ EOT;
             'fakerphp/faker' => '^1.20',
             'maltyxx/images-generator' => '^1.0',
             'mbezhanov/faker-provider-collection' => '^2.0',
-            'symfony/stopwatch' => '^5.4',
-            'symfony/web-profiler-bundle' => '^5.4'
+            'symfony/stopwatch' => '^5.0|^6.0',
+            'symfony/web-profiler-bundle' => '^5.0|^6.0'
         ];
 
         file_put_contents($composerJsonPath, json_encode($composerJson, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
