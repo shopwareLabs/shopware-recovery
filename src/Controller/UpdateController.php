@@ -56,7 +56,7 @@ class UpdateController extends AbstractController
     }
 
     #[Route('/update/_run', name: 'update_run')]
-    public function run(Request $request): StreamedResponse
+    public function run(Request $request): Response
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
@@ -96,7 +96,7 @@ class UpdateController extends AbstractController
     }
 
     #[Route('/update/_prepare', name: 'update_prepare')]
-    public function prepare(Request $request): StreamedResponse
+    public function prepare(Request $request): Response
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
@@ -131,7 +131,7 @@ class UpdateController extends AbstractController
     }
 
     #[Route('/update/_finish', name: 'update_finish')]
-    public function finish(Request $request): StreamedResponse
+    public function finish(Request $request): Response
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
