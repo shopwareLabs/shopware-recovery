@@ -3,3 +3,8 @@
 /vendor
 
 /*.phar
+# Devenv
+.devenv*
+devenv.local.nix
+
+/shop
