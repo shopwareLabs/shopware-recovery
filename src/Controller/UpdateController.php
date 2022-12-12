@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Services\FlexMigrator;
 use App\Services\RecoveryManager;
 use App\Services\ReleaseInfoProvider;
+use App\Services\StreamedCommandResponseGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,8 @@ class UpdateController extends AbstractController
     public function __construct(
         private readonly RecoveryManager $recoveryManager,
         private readonly ReleaseInfoProvider $releaseInfoProvider,
-        private readonly FlexMigrator $flexMigrator
+        private readonly FlexMigrator $flexMigrator,
+        private readonly StreamedCommandResponseGenerator $streamedCommandResponseGenerator
     ) {
     }
 
@@ -64,7 +66,7 @@ class UpdateController extends AbstractController
             return $this->redirectToRoute('index');
         }
 
-        $process = new Process([
+        return $this->streamedCommandResponseGenerator->runJSON([
             $request->getSession()->get('phpBinary'),
             $_SERVER['SCRIPT_FILENAME'],
             'composer',
@@ -75,24 +77,6 @@ class UpdateController extends AbstractController
             '--no-ansi',
             '--with-all-dependencies', // update all packages
         ]);
-
-        $process->start();
-
-        return new StreamedResponse(function () use ($process) {
-            foreach ($process->getIterator() as $item) {
-                echo $item;
-                flush();
-            }
-
-            if (!$process->isSuccessful()) {
-                echo $process->getErrorOutput();
-                flush();
-            }
-
-            echo json_encode([
-                'success' => $process->isSuccessful()
-            ]);
-        });
     }
 
     #[Route('/update/_prepare', name: 'update_prepare')]
@@ -104,30 +88,12 @@ class UpdateController extends AbstractController
             return $this->redirectToRoute('index');
         }
 
-        $process = new Process([
+        return $this->streamedCommandResponseGenerator->runJSON([
             $request->getSession()->get('phpBinary'),
             $shopwarePath . '/bin/console',
             'system:update:prepare',
             '--no-interaction',
         ]);
-
-        $process->start();
-
-        return new StreamedResponse(function () use ($process, $request) {
-            foreach ($process->getIterator() as $item) {
-                echo $item;
-                flush();
-            }
-
-            if (!$process->isSuccessful()) {
-                echo $process->getErrorOutput();
-                flush();
-            }
-
-            echo json_encode([
-                'success' => $process->isSuccessful()
-            ]);
-        });
     }
 
     #[Route('/update/_finish', name: 'update_finish')]
@@ -139,30 +105,12 @@ class UpdateController extends AbstractController
             return $this->redirectToRoute('index');
         }
 
-        $process = new Process([
+        return $this->streamedCommandResponseGenerator->runJSON([
             $request->getSession()->get('phpBinary'),
             $shopwarePath . '/bin/console',
-            'system:update:finish',
+            'system:update:prepare',
             '--no-interaction',
         ]);
-
-        $process->start();
-
-        return new StreamedResponse(function () use ($process, $request) {
-            foreach ($process->getIterator() as $item) {
-                echo $item;
-                flush();
-            }
-
-            if (!$process->isSuccessful()) {
-                echo $process->getErrorOutput();
-                flush();
-            }
-
-            echo json_encode([
-                'success' => $process->isSuccessful()
-            ]);
-        });
     }
 
     private function getLatestVersion(Request $request): string
