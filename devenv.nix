@@ -39,13 +39,13 @@
     }
   ];
 
-  scripts.build.exec = ''
+  scripts.build-phar.exec = ''
     ${pkgs.php81Packages.box}/bin/box compile
     mkdir -p shop/public
-    mv shopware-recovery.phar shop/public/
+    mv shopware-recovery.phar shop/public/shopware-recovery.phar.php
   '';
 
-  scripts.watch.exec = ''
-    ${pkgs.watchexec}/bin/watchexec -e php,js build
+  scripts.watch-phar.exec = ''
+    ${pkgs.watchexec}/bin/watchexec -e php,js build-phar
   '';
 }
