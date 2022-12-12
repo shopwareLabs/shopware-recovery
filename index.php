@@ -7,9 +7,6 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $debug = (bool) ($_SERVER['APP_DEBUG'] ?? 0);
 
-// enable debug mode
-$debug = true;
-
 $kernel = new Kernel($_SERVER['APP_ENV'] ?? 'prod', $debug);
 
 $request = Request::createFromGlobals();
