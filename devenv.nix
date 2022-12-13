@@ -1,6 +1,13 @@
 { pkgs, config, ... }:
 
 {
+  process.implementation = "process-compose";
+  process.process-compose = {
+    version = "0.5";
+    port = 9999;
+    tui = false;
+  };
+
   languages.php.enable = true;
   languages.php.package = pkgs.php.buildEnv {
     extensions = { all, enabled }: with all; enabled ++ [ redis blackfire ];
@@ -20,8 +27,8 @@
     };
   };
 
-  caddy.enable = true;
-  caddy.virtualHosts."http://localhost:8000" = {
+  services.caddy.enable = true;
+  services.caddy.virtualHosts."http://localhost:8000" = {
     extraConfig = ''
       root * shop/public
       php_fastcgi unix/${config.languages.php.fpm.pools.web.socket}
@@ -29,9 +36,9 @@
     '';
   };
 
-  mysql.enable = true;
-  mysql.initialDatabases = [{ name = "shopware"; }];
-  mysql.ensureUsers = [
+  services.mysql.enable = true;
+  services.mysql.initialDatabases = [{ name = "shopware"; }];
+  services.mysql.ensureUsers = [
     {
       name = "shopware";
       password = "shopware";
