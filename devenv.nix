@@ -1,13 +1,6 @@
 { pkgs, config, ... }:
 
 {
-  process.implementation = "process-compose";
-  process.process-compose = {
-    version = "0.5";
-    port = 9999;
-    tui = false;
-  };
-
   languages.php.enable = true;
   languages.php.package = pkgs.php.buildEnv {
     extraConfig = ''
