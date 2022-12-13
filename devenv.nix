@@ -52,7 +52,7 @@
     mv shopware-recovery.phar shop/public/shopware-recovery.phar.php
   '';
 
-  scripts.watch-phar.exec = ''
-    ${pkgs.watchexec}/bin/watchexec -e php,js build-phar
+  processes.watch-phar.exec = ''
+    ${pkgs.watchexec}/bin/watchexec -e php,js,yml build-phar
   '';
 }
