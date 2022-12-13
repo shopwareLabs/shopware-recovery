@@ -10,8 +10,9 @@
 
   languages.php.enable = true;
   languages.php.package = pkgs.php.buildEnv {
-    extensions = { all, enabled }: with all; enabled ++ [ redis blackfire ];
     extraConfig = ''
+      pdo_mysql.default_socket=''${MYSQL_UNIX_PORT}
+      mysqli.default_socket=''${MYSQL_UNIX_PORT}
       memory_limit = 2G
     '';
   };
