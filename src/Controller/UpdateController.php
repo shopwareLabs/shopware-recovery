@@ -23,7 +23,7 @@ class UpdateController extends AbstractController
     ) {
     }
 
-    #[Route('/update', name: 'update')]
+    #[Route('/update', name: 'update', defaults: ['step' => 2])]
     public function index(Request $request): Response
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();

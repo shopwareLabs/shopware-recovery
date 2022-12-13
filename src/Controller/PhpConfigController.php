@@ -10,11 +10,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PhpConfigController extends AbstractController
 {
-    public function __construct(private PhpBinaryFinder $binaryFinder)
+    public function __construct(private readonly PhpBinaryFinder $binaryFinder)
     {
     }
 
-    #[Route('/configure', name: 'configure')]
+    #[Route('/configure', name: 'configure', defaults: ['step' => 1])]
     public function index(Request $request): Response
     {
         if ($phpBinary = $request->request->get('phpBinary')) {
@@ -24,7 +24,7 @@ class PhpConfigController extends AbstractController
         }
 
         return $this->render('php_config.html.twig', [
-            'phpBinary' => $this->binaryFinder->find(),
+            'phpBinary' => $request->getSession()->get('phpBinary', $this->binaryFinder->find()),
         ]);
     }
 }

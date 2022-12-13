@@ -47,6 +47,6 @@
   '';
 
   processes.watch-phar.exec = ''
-    ${pkgs.watchexec}/bin/watchexec -e php,js,yml build-phar
+    ${pkgs.watchexec}/bin/watchexec -e php,js,yml,twig,css build-phar
   '';
 }
