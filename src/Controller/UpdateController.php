@@ -107,7 +107,7 @@ class UpdateController extends AbstractController
         return $this->streamedCommandResponseGenerator->runJSON([
             $this->recoveryManager->getPhpBinary($request),
             $shopwarePath.'/bin/console',
-            'system:update:prepare',
+            'system:update:finish',
             '--no-interaction',
         ]);
     }
