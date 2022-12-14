@@ -3,11 +3,31 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Symfony\Component\HttpFoundation\Request;
+
 class RecoveryManager
 {
+    public function getBinary(): string
+    {
+        /** @var string $fileName */
+        $fileName = $_SERVER['SCRIPT_FILENAME'];
+
+        return $fileName;
+    }
+
+    public function getPHPBinary(Request $request): string
+    {
+        $phpBinary = $request->getSession()->get('phpBinary');
+        \assert(\is_string($phpBinary));
+
+        return $phpBinary;
+    }
+
     public function getProjectDir(): string
     {
-        return \dirname($_SERVER['SCRIPT_FILENAME']);
+        /** @var string $fileName */
+        $fileName = $_SERVER['SCRIPT_FILENAME'];
+        return \dirname($fileName);
     }
 
     public function getShopwareLocation(): string|bool
@@ -22,7 +42,8 @@ class RecoveryManager
 
         foreach ($composerLookups as $composerLookup) {
             if (file_exists($composerLookup)) {
-                $composerJson = json_decode(file_get_contents($composerLookup), true, \JSON_THROW_ON_ERROR);
+                /** @var array{require: array<string, string>} $composerJson */
+                $composerJson = json_decode((string) file_get_contents($composerLookup), true, \JSON_THROW_ON_ERROR);
 
                 if (isset($composerJson['require']['shopware/core']) || isset($composerJson['require']['shopware/platform'])) {
                     return \dirname($composerLookup);
@@ -41,7 +62,8 @@ class RecoveryManager
             return 'unknown';
         }
 
-        $composerLock = json_decode(file_get_contents($lockFile), true, \JSON_THROW_ON_ERROR);
+        /** @var array{packages: array{name: string, version: string}[]} $composerLock */
+        $composerLock = json_decode((string) file_get_contents($lockFile), true, \JSON_THROW_ON_ERROR);
 
         foreach ($composerLock['packages'] as $package) {
             if ('shopware/core' === $package['name'] || 'shopware/platform' === $package['name']) {

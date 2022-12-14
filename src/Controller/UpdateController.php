@@ -27,7 +27,7 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if (false === $shopwarePath) {
+        if (is_bool($shopwarePath)) {
             return $this->redirectToRoute('index');
         }
 
@@ -44,7 +44,7 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if (false === $shopwarePath) {
+        if (is_bool($shopwarePath)) {
             return $this->redirectToRoute('index');
         }
 
@@ -61,13 +61,13 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if (false === $shopwarePath) {
+        if (is_bool($shopwarePath)) {
             return $this->redirectToRoute('index');
         }
 
         return $this->streamedCommandResponseGenerator->runJSON([
-            $request->getSession()->get('phpBinary'),
-            $_SERVER['SCRIPT_FILENAME'],
+            $this->recoveryManager->getPhpBinary($request),
+            $this->recoveryManager->getBinary(),
             'composer',
             'update',
             '-d',
@@ -83,12 +83,12 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if (false === $shopwarePath) {
+        if (is_bool($shopwarePath)) {
             return $this->redirectToRoute('index');
         }
 
         return $this->streamedCommandResponseGenerator->runJSON([
-            $request->getSession()->get('phpBinary'),
+            $this->recoveryManager->getPhpBinary($request),
             $shopwarePath.'/bin/console',
             'system:update:prepare',
             '--no-interaction',
@@ -100,12 +100,12 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if (false === $shopwarePath) {
+        if (is_bool($shopwarePath)) {
             return $this->redirectToRoute('index');
         }
 
         return $this->streamedCommandResponseGenerator->runJSON([
-            $request->getSession()->get('phpBinary'),
+            $this->recoveryManager->getPhpBinary($request),
             $shopwarePath.'/bin/console',
             'system:update:prepare',
             '--no-interaction',
@@ -115,7 +115,9 @@ class UpdateController extends AbstractController
     private function getLatestVersion(Request $request): string
     {
         if ($request->getSession()->has('latestVersion')) {
-            return $request->getSession()->get('latestVersion');
+            $sessionValue = $request->getSession()->get('latestVersion');
+            \assert(is_string($sessionValue));
+            return $sessionValue;
         }
 
         $latestVersion = $this->releaseInfoProvider->fetchLatestRelease();

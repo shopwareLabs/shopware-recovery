@@ -8,12 +8,13 @@ class ReleaseInfoProvider
     public function fetchLatestRelease(): string
     {
         $ch = curl_init('https://repo.packagist.org/p2/shopware/core.json');
-        curl_setopt($ch, \CURLOPT_RETURNTRANSFER, 1);
+        \assert($ch instanceof \CurlHandle);
+        curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, \CURLOPT_HTTPHEADER, [
             'User-Agent: Shopware Recovery',
         ]);
 
-        $result = curl_exec($ch);
+        $result = (string) curl_exec($ch);
 
         if (curl_errno($ch)) {
             throw new \RuntimeException('Error: "'.curl_error($ch).'" - Code: '.curl_errno($ch));
@@ -21,9 +22,10 @@ class ReleaseInfoProvider
 
         curl_close($ch);
 
-        $result = json_decode($result, true);
+        /** @var array{packages: array{"shopware/core": array{version: string}[]}} $response */
+        $response = json_decode($result, true, JSON_THROW_ON_ERROR);
 
-        foreach ($result['packages']['shopware/core'] as $version) {
+        foreach ($response['packages']['shopware/core'] as $version) {
             return $version['version'];
         }
 

@@ -100,7 +100,9 @@ EOT;
     public function patchRootComposerJson(string $projectDir): void
     {
         $composerJsonPath = $projectDir.'/composer.json';
-        $composerJson = json_decode(file_get_contents($composerJsonPath), true, \JSON_THROW_ON_ERROR);
+
+        /** @var array{require: array<string, string>, config?: array{platform?: string, "allow-plugins": array<string, bool>}} $composerJson */
+        $composerJson = json_decode((string) file_get_contents($composerJsonPath), true, \JSON_THROW_ON_ERROR);
 
         $composerJson['require']['symfony/flex'] = '^2';
         $composerJson['require']['symfony/runtime'] = '^5.0|^6.0';

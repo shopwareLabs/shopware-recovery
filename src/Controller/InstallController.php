@@ -24,7 +24,7 @@ class InstallController extends AbstractController
     public function index(): Response
     {
         // Check if Shopware is already installed
-        if (false !== $this->recoveryManager->getShopwareLocation()) {
+        if (is_bool($this->recoveryManager->getShopwareLocation())) {
             return $this->redirectToRoute('index');
         }
 
@@ -42,8 +42,8 @@ class InstallController extends AbstractController
         };
 
         return $this->streamedCommandResponseGenerator->run([
-            $request->getSession()->get('phpBinary'),
-            $_SERVER['SCRIPT_FILENAME'],
+            $this->recoveryManager->getPhpBinary($request),
+            $this->recoveryManager->getBinary(),
             'composer',
             'create-project',
             'shopware/production:dev-flex',
