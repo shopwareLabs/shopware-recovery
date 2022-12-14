@@ -38,9 +38,9 @@ if (installButton) {
 
         installButton.disabled = true;
 
-        const instalLResponse = await fetch(`${baseUrl}/install/_run`);
+        const installResponse = await fetch(`${baseUrl}/install/_run`);
 
-        const result = await tailLog(instalLResponse, installLogOutput);
+        const result = await tailLog(installResponse, installLogOutput);
         if (result.newLocation) {
             window.location = result.newLocation;
         }
@@ -93,7 +93,7 @@ if (updateButton) {
             await tailLog(finishUpdate, updateLogOutput);
         }
 
-        window.location.reload();
+        window.location.href = `${baseUrl}/finish`;
     }
 }
 

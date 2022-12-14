@@ -31,11 +31,18 @@ class UpdateController extends AbstractController
             return $this->redirectToRoute('index');
         }
 
+        $currentShopwareVersion = $this->recoveryManager->getCurrentShopwareVersion($shopwarePath);
+        $latestVersion = $this->getLatestVersion($request);
+
+        if ($currentShopwareVersion === $latestVersion) {
+            return $this->redirectToRoute('finish');
+        }
+
         return $this->render('update.html.twig', [
             'shopwarePath' => $shopwarePath,
-            'currentShopwareVersion' => $this->recoveryManager->getCurrentShopwareVersion($shopwarePath),
+            'currentShopwareVersion' => $currentShopwareVersion,
             'isFlexProject' => $this->recoveryManager->isFlexProject($shopwarePath),
-            'latestShopwareVersion' => $this->getLatestVersion($request),
+            'latestShopwareVersion' => $latestVersion,
         ]);
     }
 

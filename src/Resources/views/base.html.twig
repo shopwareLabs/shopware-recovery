@@ -21,10 +21,6 @@
                 RECOVERY
             </div>
         </div>
-
-        <div class="version--notice">
-            6.5.0.0
-        </div>
     </header>
 
     <div class="page--wrap">
@@ -53,7 +49,11 @@
     </div>
     <div class="footer-main"></div>
     <script>
-        var baseUrl = '{{ app.request.baseUrl }}';
+        const baseUrl = '{{ app.request.baseUrl }}';
+
+        {% if isFlexProject is defined %}
+        const isFlexProject = {{ isFlexProject|json_encode|raw }};
+        {% endif %}
     </script>
     <script type="application/javascript" src="{{ app.request.baseUrl }}/assets/app.js"></script>
 </body>
