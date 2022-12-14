@@ -9,12 +9,10 @@
         <p>
             Found a Shopware Installation at: {{ shopwarePath }}<br>
             Current Version: {{ currentShopwareVersion }}<br>
-            Is Symfony Flex project: {{ isFlexProject ? 'Yes' : 'No' }}
+            Latest Version: {{ latestShopwareVersion }}
         </p>
 
         <div class="alert alert-info">Make sure you have created a Backup before updating</div>
-
-        <button class="btn btn-primary" id="update-start">Update Shopware</button>
 
         <div class="card mt-4" id="update-log-card" style="display: none">
             <div class="card-body">
@@ -23,6 +21,11 @@
                 <pre class="form-control" id="update-log-output" style="height: 60vh"></pre>
             </div>
         </div>
+    </div>
+
+    <div class="card__footer flex-container">
+        <a class="btn flex-item flex-left" href="{{ url('configure') }}">Back</a>
+        <button type="submit" class="btn btn-primary flex-item flex-right" id="update-start">Update Shopware</button>
     </div>
 
     <script>
