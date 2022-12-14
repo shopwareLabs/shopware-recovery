@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -9,8 +10,6 @@ use App\Services\StreamedCommandResponseGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UpdateController extends AbstractController
@@ -28,7 +27,7 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if ($shopwarePath === false) {
+        if (false === $shopwarePath) {
             return $this->redirectToRoute('index');
         }
 
@@ -45,7 +44,7 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if ($shopwarePath === false) {
+        if (false === $shopwarePath) {
             return $this->redirectToRoute('index');
         }
 
@@ -62,7 +61,7 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if ($shopwarePath === false) {
+        if (false === $shopwarePath) {
             return $this->redirectToRoute('index');
         }
 
@@ -84,13 +83,13 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if ($shopwarePath === false) {
+        if (false === $shopwarePath) {
             return $this->redirectToRoute('index');
         }
 
         return $this->streamedCommandResponseGenerator->runJSON([
             $request->getSession()->get('phpBinary'),
-            $shopwarePath . '/bin/console',
+            $shopwarePath.'/bin/console',
             'system:update:prepare',
             '--no-interaction',
         ]);
@@ -101,13 +100,13 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if ($shopwarePath === false) {
+        if (false === $shopwarePath) {
             return $this->redirectToRoute('index');
         }
 
         return $this->streamedCommandResponseGenerator->runJSON([
             $request->getSession()->get('phpBinary'),
-            $shopwarePath . '/bin/console',
+            $shopwarePath.'/bin/console',
             'system:update:prepare',
             '--no-interaction',
         ]);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services;
 
@@ -29,7 +30,7 @@ class FlexMigrator
         'gitlab-ci.yml',
         'bin',
         'config/etc',
-        'config/services'
+        'config/services',
     ];
 
     private const ENV_DEFAULT = <<<EOT
@@ -79,27 +80,27 @@ EOT;
         $fs = new Filesystem();
 
         foreach (self::REMOVE_FILES as $file) {
-            $path = $projectDir . '/' . $file;
+            $path = $projectDir.'/'.$file;
             if ($fs->exists($path)) {
                 $fs->remove($path);
             }
         }
 
         foreach (self::REMOVE_DIRECTORIES as $directory) {
-            $path = $projectDir . '/' . $directory;
+            $path = $projectDir.'/'.$directory;
 
             if ($fs->exists($path)) {
                 $fs->remove($path);
             }
         }
 
-        $fs->mkdir($projectDir . '/bin');
+        $fs->mkdir($projectDir.'/bin');
     }
 
     public function patchRootComposerJson(string $projectDir): void
     {
-        $composerJsonPath = $projectDir . '/composer.json';
-        $composerJson = json_decode(file_get_contents($composerJsonPath), true, JSON_THROW_ON_ERROR);
+        $composerJsonPath = $projectDir.'/composer.json';
+        $composerJson = json_decode(file_get_contents($composerJsonPath), true, \JSON_THROW_ON_ERROR);
 
         $composerJson['require']['symfony/flex'] = '^2';
         $composerJson['require']['symfony/runtime'] = '^5.0|^6.0';
@@ -122,22 +123,22 @@ EOT;
 
         $composerJson['scripts'] = [
             'auto-scripts' => [
-                'assets:install' => 'symfony-cmd'
+                'assets:install' => 'symfony-cmd',
             ],
             'post-install-cmd' => [
-                '@auto-scripts'
+                '@auto-scripts',
             ],
             'post-update-cmd' => [
-                '@auto-scripts'
-            ]
+                '@auto-scripts',
+            ],
         ];
 
         $composerJson['extra']['symfony'] = [
             'allow-contrib' => true,
             'endpoint' => [
-                "https://raw.githubusercontent.com/shopware/recipes/flex/main/index.json",
-                "flex://defaults"
-            ]
+                'https://raw.githubusercontent.com/shopware/recipes/flex/main/index.json',
+                'flex://defaults',
+            ],
         ];
 
         $composerJson['require-dev'] = [
@@ -145,29 +146,30 @@ EOT;
             'maltyxx/images-generator' => '^1.0',
             'mbezhanov/faker-provider-collection' => '^2.0',
             'symfony/stopwatch' => '^5.0|^6.0',
-            'symfony/web-profiler-bundle' => '^5.0|^6.0'
+            'symfony/web-profiler-bundle' => '^5.0|^6.0',
         ];
 
-        file_put_contents($composerJsonPath, json_encode($composerJson, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        file_put_contents($composerJsonPath, json_encode($composerJson, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
     }
 
     public function copyNewTemplateFiles(string $projectDir): void
     {
         $fs = new Filesystem();
 
-        $fs->mirror(__DIR__ . '/../Resources/flex-config/', $projectDir);
+        $fs->mirror(__DIR__.'/../Resources/flex-config/', $projectDir);
     }
 
     public function migrateEnvFile(string $projectDir): void
     {
-        $envPath = $projectDir . '/.env';
+        $envPath = $projectDir.'/.env';
 
         if (!file_exists($envPath)) {
             file_put_contents($envPath, self::ENV_DEFAULT);
+
             return;
         }
 
-        rename($envPath, $envPath . '.local');
+        rename($envPath, $envPath.'.local');
         file_put_contents($envPath, self::ENV_DEFAULT);
     }
 }

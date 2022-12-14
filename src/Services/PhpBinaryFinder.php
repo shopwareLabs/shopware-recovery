@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services;
 
@@ -53,10 +54,10 @@ class PhpBinaryFinder
         }
 
         // Look for PHP binaries in same place as our fpm/cgi binary
-        if (defined('PHP_BINARY')) {
-            $phpPath = dirname(PHP_BINARY);
-            $fileName = explode('-', basename(PHP_BINARY), 2);
-            $expectedPath = $phpPath . DIRECTORY_SEPARATOR . $fileName[0];
+        if (\defined('PHP_BINARY')) {
+            $phpPath = \dirname(\PHP_BINARY);
+            $fileName = explode('-', basename(\PHP_BINARY), 2);
+            $expectedPath = $phpPath.\DIRECTORY_SEPARATOR.$fileName[0];
 
             if (file_exists($expectedPath) && $this->isPHPRunning($expectedPath)) {
                 return $expectedPath;
@@ -69,7 +70,7 @@ class PhpBinaryFinder
         foreach (self::PHP_BINARY_NAMES as $name) {
             $binary = $finder->find($name);
 
-            if ($binary !== null) {
+            if (null !== $binary) {
                 return $binary;
             }
         }
@@ -100,10 +101,10 @@ class PhpBinaryFinder
                 '{extra}',
             ],
             [
-                PHP_MAJOR_VERSION,
-                PHP_MINOR_VERSION,
-                PHP_RELEASE_VERSION,
-                PHP_EXTRA_VERSION,
+                \PHP_MAJOR_VERSION,
+                \PHP_MINOR_VERSION,
+                \PHP_RELEASE_VERSION,
+                \PHP_EXTRA_VERSION,
             ],
             $path
         );

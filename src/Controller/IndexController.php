@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -16,7 +17,7 @@ class IndexController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(): Response
     {
-        if ($this->recoveryManager->getShopwareLocation() === false) {
+        if (false === $this->recoveryManager->getShopwareLocation()) {
             return $this->redirectToRoute('install');
         }
 

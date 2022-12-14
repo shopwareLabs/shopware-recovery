@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services;
 
@@ -17,7 +18,7 @@ class StreamedCommandResponseGenerator
 
         $process->start();
 
-        return new StreamedResponse(function () use ($process, $finish) {
+        return new StreamedResponse(function () use ($process, $finish): void {
             foreach ($process->getIterator() as $item) {
                 echo $item;
                 flush();
@@ -32,7 +33,7 @@ class StreamedCommandResponseGenerator
      */
     public function runJSON(array $params): StreamedResponse
     {
-        return $this->run($params, function (Process $process) {
+        return $this->run($params, function (Process $process): void {
             echo json_encode([
                 'success' => $process->isSuccessful(),
             ]);

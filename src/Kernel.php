@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App;
 
@@ -32,19 +33,18 @@ class Kernel extends BaseKernel
         return $this->getCacheDir();
     }
 
-
     public function getCacheDir(): string
     {
-        return sys_get_temp_dir() . '/shopware-recovery/';
+        return sys_get_temp_dir().'/shopware-recovery/';
     }
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
-        $loader->load(__DIR__ . '/Resources/config/config.yml');
+        $loader->load(__DIR__.'/Resources/config/config.yml');
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import(__DIR__ . '/Controller');
+        $routes->import(__DIR__.'/Controller');
     }
 }

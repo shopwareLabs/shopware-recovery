@@ -17,7 +17,8 @@
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.47",
-        "symplify/easy-coding-standard": "^11.1"
+        "symplify/easy-coding-standard": "^11.1",
+        "kubawerlos/php-cs-fixer-custom-fixers": "~v3.10.1"
     },
     "config": {
         "allow-plugins": {

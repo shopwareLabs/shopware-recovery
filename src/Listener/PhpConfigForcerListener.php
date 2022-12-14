@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Listener;
 
@@ -18,7 +19,7 @@ class PhpConfigForcerListener
     {
         $request = $event->getRequest();
 
-        if ($request->attributes->get('_route') === 'configure' || $request->getSession()->has('phpBinary')) {
+        if ('configure' === $request->attributes->get('_route') || $request->getSession()->has('phpBinary')) {
             return;
         }
 

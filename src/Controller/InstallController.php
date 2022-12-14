@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -23,7 +24,7 @@ class InstallController extends AbstractController
     public function index(): Response
     {
         // Check if Shopware is already installed
-        if ($this->recoveryManager->getShopwareLocation() !== false) {
+        if (false !== $this->recoveryManager->getShopwareLocation()) {
             return $this->redirectToRoute('index');
         }
 
@@ -33,10 +34,10 @@ class InstallController extends AbstractController
     #[Route('/install/_run', name: 'install_run')]
     public function run(Request $request): StreamedResponse
     {
-        $finish = function (Process $process) use ($request) {
+        $finish = function (Process $process) use ($request): void {
             echo json_encode([
                 'success' => $process->isSuccessful(),
-                'newLocation' => $request->getBasePath() . '/shopware/public/',
+                'newLocation' => $request->getBasePath().'/shopware/public/',
             ]);
         };
 
