@@ -81,6 +81,7 @@ class UpdateController extends AbstractController
             $shopwarePath,
             '--no-interaction',
             '--no-ansi',
+            '--no-scripts',
             '--with-all-dependencies', // update all packages
         ]);
     }
