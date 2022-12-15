@@ -72,6 +72,8 @@ class UpdateController extends AbstractController
             return $this->redirectToRoute('index');
         }
 
+        $this->updateComposerJsonConstraint($request, $shopwarePath . '/composer.json');
+
         return $this->streamedCommandResponseGenerator->runJSON([
             $this->recoveryManager->getPhpBinary($request),
             $this->recoveryManager->getBinary(),
@@ -128,10 +130,52 @@ class UpdateController extends AbstractController
             return $sessionValue;
         }
 
-        $latestVersion = $this->releaseInfoProvider->fetchLatestRelease();
+        $latestVersions = $this->releaseInfoProvider->fetchLatestRelease();
+
+        $shopwarePath = $this->recoveryManager->getShopwareLocation();
+        \assert(is_string($shopwarePath));
+
+        $currentVersion = $this->recoveryManager->getCurrentShopwareVersion($shopwarePath);
+        $latestVersion = $latestVersions[substr($currentVersion, 0, 3)];
+
+        // If the user is already on the latest version in the current major, we need to update to the next major
+        if ($latestVersion === $currentVersion) {
+            $first = (int) substr($currentVersion, 0, 1);
+            $second = (int) substr($currentVersion, 2, 1);
+            $second++;
+
+            if (isset($latestVersions[$first . '.' . $second])) {
+                $latestVersion = $latestVersions[$first . '.' . $second];
+            }
+        }
 
         $request->getSession()->set('latestVersion', $latestVersion);
 
         return $latestVersion;
+    }
+
+    private function updateComposerJsonConstraint(Request $request, string $file): void
+    {
+        $shopwarePackages = [
+            'shopware/core',
+            'shopware/administration',
+            'shopware/storefront',
+            'shopware/elasticsearch',
+        ];
+
+        /** @var array{require: array<string, string>} $composerJson */
+        $composerJson = json_decode((string) file_get_contents($file), true, JSON_THROW_ON_ERROR);
+        $latestVersion = $this->getLatestVersion($request);
+
+        foreach ($shopwarePackages as $shopwarePackage) {
+            if (!isset($composerJson['require'][$shopwarePackage])) {
+                continue;
+            }
+
+            // Lock the composer version to that major version
+            $composerJson['require'][$shopwarePackage] = '~' . substr($latestVersion, 0, 3) . '.0';
+        }
+
+        file_put_contents($file, json_encode($composerJson, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 }

@@ -5,7 +5,10 @@ namespace App\Services;
 
 class ReleaseInfoProvider
 {
-    public function fetchLatestRelease(): string
+    /**
+     * @return array<string, string>
+     */
+    public function fetchLatestRelease(): array
     {
         $ch = curl_init('https://repo.packagist.org/p2/shopware/core.json');
         \assert($ch instanceof \CurlHandle);
@@ -25,10 +28,21 @@ class ReleaseInfoProvider
         /** @var array{packages: array{"shopware/core": array{version: string}[]}} $response */
         $response = json_decode($result, true, JSON_THROW_ON_ERROR);
 
-        foreach ($response['packages']['shopware/core'] as $version) {
-            return $version['version'];
+        $versions = array_column($response['packages']['shopware/core'], 'version');
+
+        // Index them by major version
+        $mappedVersions = [];
+
+        foreach ($versions as $version) {
+            $major = substr($version, 0, 3);
+
+            if (isset($mappedVersions[$major])) {
+                continue;
+            }
+
+            $mappedVersions[$major] = $version;
         }
 
-        throw new \RuntimeException('Could not find latest version');
+        return $mappedVersions;
     }
 }
