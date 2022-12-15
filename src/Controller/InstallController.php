@@ -49,6 +49,7 @@ class InstallController extends AbstractController
             'shopware/production:dev-flex',
             '--no-interaction',
             '--no-ansi',
+            '-v',
             'shopware',
         ], $finish);
     }

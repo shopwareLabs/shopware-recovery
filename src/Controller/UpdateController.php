@@ -84,6 +84,7 @@ class UpdateController extends AbstractController
             '--no-interaction',
             '--no-ansi',
             '--no-scripts',
+            '-v',
             '--with-all-dependencies', // update all packages
         ]);
     }
