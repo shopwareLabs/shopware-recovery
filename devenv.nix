@@ -1,9 +1,9 @@
-{ pkgs, config, ... }:
+{ lib, pkgs, config, ... }:
 
 {
   enterShell = ''
-      rm -f .devenv/bin
-      ln -sf ${pkgs.buildEnv { name = "devenv"; paths = config.packages; ignoreCollisions = true; }}/bin .devenv/bin
+    rm -f .devenv/bin
+    ln -sf ${pkgs.buildEnv { name = "devenv"; paths = config.packages; ignoreCollisions = true; }}/bin .devenv/bin
   '';
 
   languages.php.enable = true;
@@ -54,4 +54,52 @@
   processes.watch-phar.exec = ''
     ${pkgs.watchexec}/bin/watchexec -e php,js,yml,twig,css build-phar
   '';
+
+  services.adminer.enable = true;
+  services.adminer.listen = "127.0.0.1:8081";
+
+  services.caddy.virtualHosts."http://localhost:3500" = {
+    extraConfig = ''
+      root * .
+      file_server
+    '';
+  };
+
+  services.wiremock = {
+    enable = builtins.pathExists ./update.zip;
+    mappings = [
+      {
+        request = {
+          method = "GET";
+          url = "/v1/release/update?shopware_version=6.4.17.2&channel=stable&major=6&code=";
+        };
+        response = {
+          status = 200;
+          jsonBody = {
+            version = "6.4.18.0";
+            release_date = false;
+            security_update = false;
+            uri = "http://localhost:3500/update.zip";
+            size = lib.toInt (lib.fileContents (pkgs.runCommand "update.zip" { } ''
+              du -b ${./update.zip} | cut -f1 > $out;
+            ''));
+            sha1 = builtins.hashFile "sha1" ./update.zip;
+            sha256 = builtins.hashFile "sha256" ./update.zip;
+            checks = [ ];
+            changelog = {
+              de = {
+                language = "de";
+                changelog = "German";
+              };
+              en = {
+                language = "en";
+                changelog = "English";
+              };
+            };
+            isNewer = true;
+          };
+        };
+      }
+    ];
+  };
 }

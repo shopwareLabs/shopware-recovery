@@ -9,3 +9,5 @@ devenv.local.nix
 
 /shop
 /backup.zip
+/shopware.sql
+/update.zip
