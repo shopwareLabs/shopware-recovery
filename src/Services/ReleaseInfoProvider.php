@@ -34,6 +34,10 @@ class ReleaseInfoProvider
         $mappedVersions = [];
 
         foreach ($versions as $version) {
+            if (str_contains($version, 'dev-') || str_contains($version, 'alpha') || str_contains($version, 'beta') || str_contains($version, 'rc')) {
+                continue;
+            }
+
             $major = substr($version, 0, 3);
 
             if (isset($mappedVersions[$major])) {
