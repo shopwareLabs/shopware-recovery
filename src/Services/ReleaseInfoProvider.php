@@ -3,30 +3,25 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 class ReleaseInfoProvider
 {
+    private HttpClientInterface $client;
+
+    public function __construct(?HttpClientInterface $client = null)
+    {
+        $this->client = $client ?? HttpClient::create();
+    }
+
     /**
      * @return array<string, string>
      */
     public function fetchLatestRelease(): array
     {
-        $ch = curl_init('https://repo.packagist.org/p2/shopware/core.json');
-        \assert($ch instanceof \CurlHandle);
-        curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, \CURLOPT_HTTPHEADER, [
-            'User-Agent: Shopware Recovery',
-        ]);
-
-        $result = (string) curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            throw new \RuntimeException('Error: "'.curl_error($ch).'" - Code: '.curl_errno($ch));
-        }
-
-        curl_close($ch);
-
         /** @var array{packages: array{"shopware/core": array{version: string}[]}} $response */
-        $response = json_decode($result, true, JSON_THROW_ON_ERROR);
+        $response = $this->client->request('GET', 'https://repo.packagist.org/p2/shopware/core.json')->toArray();
 
         $versions = array_column($response['packages']['shopware/core'], 'version');
 

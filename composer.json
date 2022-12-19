@@ -1,10 +1,10 @@
 {
-    "type": "project",
     "license": "proprietary",
-    "prefer-stable": true,
+    "type": "project",
     "require": {
         "php": ">=8.1",
         "ext-ctype": "*",
+        "ext-curl": "*",
         "ext-iconv": "*",
         "composer/composer": "^2.4",
         "symfony/console": "6.2.*",
@@ -12,35 +12,16 @@
         "symfony/framework-bundle": "6.2.*",
         "symfony/process": "^6.2",
         "symfony/twig-bundle": "^6.2",
+        "symfony/http-client": "^6.2",
         "symfony/yaml": "6.2.*",
-        "twig/twig": "^3.4",
-        "ext-curl": "*"
+        "twig/twig": "^3.4"
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.47",
-        "symplify/easy-coding-standard": "^11.1",
         "kubawerlos/php-cs-fixer-custom-fixers": "~v3.10.1",
-        "phpstan/phpstan": "^1.9"
-    },
-    "config": {
-        "allow-plugins": {
-            "composer/package-versions-deprecated": true
-        },
-        "optimize-autoloader": true,
-        "preferred-install": {
-            "*": "dist"
-        },
-        "sort-packages": true
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "App\\Tests\\": "tests/"
-        }
+        "phpstan/phpstan": "^1.9",
+        "phpunit/phpunit": "^9.5",
+        "symfony/maker-bundle": "^1.47",
+        "symplify/easy-coding-standard": "^11.1"
     },
     "replace": {
         "symfony/polyfill-ctype": "*",
@@ -53,6 +34,27 @@
     },
     "conflict": {
         "symfony/symfony": "*"
+    },
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        },
+        "optimize-autoloader": true,
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
     },
     "extra": {
         "symfony": {
