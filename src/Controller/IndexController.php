@@ -17,10 +17,12 @@ class IndexController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(): Response
     {
-        if (false === $this->recoveryManager->getShopwareLocation()) {
+        try {
+            $this->recoveryManager->getShopwareLocation();
+
+            return $this->redirectToRoute('update');
+        } catch (\RuntimeException $e) {
             return $this->redirectToRoute('install');
         }
-
-        return $this->redirectToRoute('update');
     }
 }

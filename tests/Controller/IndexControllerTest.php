@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
@@ -17,7 +18,7 @@ class IndexControllerTest extends TestCase
     public function testIndexRedirectsToInstall(): void
     {
         $recovery = $this->createMock(RecoveryManager::class);
-        $recovery->method('getShopwareLocation')->willReturn(false);
+        $recovery->method('getShopwareLocation')->willThrowException(new \RuntimeException('Cannot find Shopware installation'));
 
         $router = $this->createMock(Router::class);
         $router
@@ -31,8 +32,8 @@ class IndexControllerTest extends TestCase
         $controller->setContainer($container);
 
         $response = $controller->index();
-        $this->assertSame(Response::HTTP_FOUND, $response->getStatusCode());
-        $this->assertSame('install', $response->headers->get('Location'));
+        static::assertSame(Response::HTTP_FOUND, $response->getStatusCode());
+        static::assertSame('install', $response->headers->get('Location'));
     }
 
     public function testIndexRedirectsToUpdate(): void
@@ -52,7 +53,7 @@ class IndexControllerTest extends TestCase
         $controller->setContainer($container);
 
         $response = $controller->index();
-        $this->assertSame(Response::HTTP_FOUND, $response->getStatusCode());
-        $this->assertSame('update', $response->headers->get('Location'));
+        static::assertSame(Response::HTTP_FOUND, $response->getStatusCode());
+        static::assertSame('update', $response->headers->get('Location'));
     }
 }

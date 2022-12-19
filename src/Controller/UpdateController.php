@@ -27,10 +27,6 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if (is_bool($shopwarePath)) {
-            return $this->redirectToRoute('index');
-        }
-
         $currentShopwareVersion = $this->recoveryManager->getCurrentShopwareVersion($shopwarePath);
         $latestVersion = $this->getLatestVersion($request);
 
@@ -51,16 +47,12 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if (is_bool($shopwarePath)) {
-            return $this->redirectToRoute('index');
-        }
-
         $this->flexMigrator->cleanup($shopwarePath);
         $this->flexMigrator->patchRootComposerJson($shopwarePath);
         $this->flexMigrator->copyNewTemplateFiles($shopwarePath);
         $this->flexMigrator->migrateEnvFile($shopwarePath);
 
-        return $this->redirectToRoute('update');
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     #[Route('/update/_run', name: 'update_run')]
@@ -68,11 +60,7 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if (is_bool($shopwarePath)) {
-            return $this->redirectToRoute('index');
-        }
-
-        $this->updateComposerJsonConstraint($request, $shopwarePath . '/composer.json');
+        $this->updateComposerJsonConstraint($request, $shopwarePath.'/composer.json');
 
         return $this->streamedCommandResponseGenerator->runJSON([
             $this->recoveryManager->getPhpBinary($request),
@@ -94,10 +82,6 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if (is_bool($shopwarePath)) {
-            return $this->redirectToRoute('index');
-        }
-
         return $this->streamedCommandResponseGenerator->runJSON([
             $this->recoveryManager->getPhpBinary($request),
             $shopwarePath.'/bin/console',
@@ -111,10 +95,6 @@ class UpdateController extends AbstractController
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
 
-        if (is_bool($shopwarePath)) {
-            return $this->redirectToRoute('index');
-        }
-
         return $this->streamedCommandResponseGenerator->runJSON([
             $this->recoveryManager->getPhpBinary($request),
             $shopwarePath.'/bin/console',
@@ -127,14 +107,15 @@ class UpdateController extends AbstractController
     {
         if ($request->getSession()->has('latestVersion')) {
             $sessionValue = $request->getSession()->get('latestVersion');
-            \assert(is_string($sessionValue));
+            \assert(\is_string($sessionValue));
+
             return $sessionValue;
         }
 
         $latestVersions = $this->releaseInfoProvider->fetchLatestRelease();
 
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
-        \assert(is_string($shopwarePath));
+        \assert(\is_string($shopwarePath));
 
         $currentVersion = $this->recoveryManager->getCurrentShopwareVersion($shopwarePath);
         $latestVersion = $latestVersions[substr($currentVersion, 0, 3)];
@@ -143,10 +124,10 @@ class UpdateController extends AbstractController
         if ($latestVersion === $currentVersion) {
             $first = (int) substr($currentVersion, 0, 1);
             $second = (int) substr($currentVersion, 2, 1);
-            $second++;
+            ++$second;
 
-            if (isset($latestVersions[$first . '.' . $second])) {
-                $latestVersion = $latestVersions[$first . '.' . $second];
+            if (isset($latestVersions[$first.'.'.$second])) {
+                $latestVersion = $latestVersions[$first.'.'.$second];
             }
         }
 
@@ -165,7 +146,7 @@ class UpdateController extends AbstractController
         ];
 
         /** @var array{require: array<string, string>} $composerJson */
-        $composerJson = json_decode((string) file_get_contents($file), true, JSON_THROW_ON_ERROR);
+        $composerJson = json_decode((string) file_get_contents($file), true, \JSON_THROW_ON_ERROR);
         $latestVersion = $this->getLatestVersion($request);
 
         foreach ($shopwarePackages as $shopwarePackage) {
@@ -174,9 +155,9 @@ class UpdateController extends AbstractController
             }
 
             // Lock the composer version to that major version
-            $composerJson['require'][$shopwarePackage] = '~' . substr($latestVersion, 0, 3) . '.0';
+            $composerJson['require'][$shopwarePackage] = '~'.substr($latestVersion, 0, 3).'.0';
         }
 
-        file_put_contents($file, json_encode($composerJson, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        file_put_contents($file, json_encode($composerJson, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
     }
 }

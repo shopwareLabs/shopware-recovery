@@ -11,3 +11,5 @@ devenv.local.nix
 /backup.zip
 /shopware.sql
 /update.zip
+
+.phpunit.cache

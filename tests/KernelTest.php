@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Tests;
 
@@ -6,6 +7,7 @@ use App\Kernel;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Component\Routing\Router;
 
 /**
  * @covers \App\Kernel
@@ -34,15 +36,15 @@ class KernelTest extends TestCase
     {
         $kernel = new Kernel('test', true);
 
-        static::assertSame(realpath(__DIR__ . '/../src'), $kernel->getProjectDir());
+        static::assertSame(realpath(__DIR__.'/../src'), $kernel->getProjectDir());
     }
 
     public function testCacheDir(): void
     {
         $kernel = new Kernel('test', true);
 
-        static::assertSame(sys_get_temp_dir() . '/shopware-recovery/', $kernel->getCacheDir());
-        static::assertSame(sys_get_temp_dir() . '/shopware-recovery/', $kernel->getLogDir());
+        static::assertSame(sys_get_temp_dir().'/shopware-recovery/', $kernel->getCacheDir());
+        static::assertSame(sys_get_temp_dir().'/shopware-recovery/', $kernel->getLogDir());
     }
 
     public function testBuildKernel(): void
@@ -52,6 +54,7 @@ class KernelTest extends TestCase
 
         static::assertTrue($kernel->getContainer()->has('router'));
 
+        /** @var Router $router */
         $router = $kernel->getContainer()->get('router');
         static::assertCount(10, $router->getRouteCollection());
     }

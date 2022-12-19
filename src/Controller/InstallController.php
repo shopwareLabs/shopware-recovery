@@ -23,11 +23,6 @@ class InstallController extends AbstractController
     #[Route('/install', name: 'install')]
     public function index(): Response
     {
-        // Check if Shopware is already installed
-        if (!is_bool($this->recoveryManager->getShopwareLocation())) {
-            return $this->redirectToRoute('index');
-        }
-
         return $this->render('install.html.twig');
     }
 

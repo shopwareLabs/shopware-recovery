@@ -6,6 +6,9 @@ namespace App\Services;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
+/**
+ * @codeCoverageIgnore
+ */
 class PhpBinaryFinder
 {
     private const PHP_BINARY_NAMES = ['php8.2', 'php8.1', 'php'];

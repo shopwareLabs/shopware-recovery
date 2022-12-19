@@ -20,7 +20,7 @@ class StreamedCommandResponseGenerator
 
         return new StreamedResponse(function () use ($process, $finish): void {
             foreach ($process->getIterator() as $item) {
-                \assert(is_string($item));
+                \assert(\is_string($item));
                 echo $item;
                 flush();
             }

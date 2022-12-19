@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Tests\Services;
 
@@ -30,9 +31,9 @@ class ReleaseInfoProviderTest extends TestCase
                         [
                             'version' => '6.3.5.0',
                         ],
-                    ]
-                ]
-            ], JSON_THROW_ON_ERROR)),
+                    ],
+                ],
+            ], \JSON_THROW_ON_ERROR)),
         ]);
 
         $releaseInfoProvider = new ReleaseInfoProvider($mockClient);

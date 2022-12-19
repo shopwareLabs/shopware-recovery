@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Tests\Services;
 
@@ -38,6 +39,6 @@ class StreamedCommandResponseGeneratorTest extends TestCase
 
         $content = ob_get_clean();
 
-        static::assertSame('foo' . PHP_EOL . '{"success":true}', $content);
+        static::assertSame('foo'.\PHP_EOL.'{"success":true}', $content);
     }
 }

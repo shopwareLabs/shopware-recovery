@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Tests\Services;
 
@@ -25,14 +26,18 @@ class RecoveryManagerTest extends TestCase
     {
         $recoveryManager = new RecoveryManager();
 
-        static::assertSame(\dirname($_SERVER['SCRIPT_FILENAME']), $recoveryManager->getProjectDir());
+        $fileName = $_SERVER['SCRIPT_FILENAME'];
+        static::assertIsString($fileName);
+        static::assertSame(\dirname($fileName), $recoveryManager->getProjectDir());
     }
 
     public function testGetShopwareLocationReturnsFalseMissingShopware(): void
     {
         $recoveryManager = new RecoveryManager();
 
-        static::assertFalse($recoveryManager->getShopwareLocation());
+        static::expectException(\RuntimeException::class);
+        static::expectExceptionMessage('Could not find Shopware installation');
+        $recoveryManager->getShopwareLocation();
     }
 
     /**
@@ -42,7 +47,7 @@ class RecoveryManagerTest extends TestCase
     {
         $recoveryManager = new RecoveryManager();
 
-        $tmpDir = \sys_get_temp_dir() . '/' . \uniqid('shopware', true);
+        $tmpDir = sys_get_temp_dir().'/'.uniqid('shopware', true);
 
         $fs = new Filesystem();
         $this->prepareShopware($fs, $tmpDir);
@@ -59,7 +64,7 @@ class RecoveryManagerTest extends TestCase
     {
         $recoveryManager = new RecoveryManager();
 
-        $tmpDir = \sys_get_temp_dir() . '/' . \uniqid('shopware', true);
+        $tmpDir = sys_get_temp_dir().'/'.uniqid('shopware', true);
 
         $fs = new Filesystem();
         $this->prepareShopware($fs, $tmpDir);
@@ -80,15 +85,15 @@ class RecoveryManagerTest extends TestCase
     {
         $recoveryManager = new RecoveryManager();
 
-        $tmpDir = \sys_get_temp_dir() . '/' . \uniqid('shopware', true);
+        $tmpDir = sys_get_temp_dir().'/'.uniqid('shopware', true);
 
         $fs = new Filesystem();
 
         $fs->mkdir($tmpDir);
 
-        $fs->dumpFile($tmpDir . '/composer.lock', json_encode([
+        $fs->dumpFile($tmpDir.'/composer.lock', json_encode([
             'packages' => [],
-        ], JSON_THROW_ON_ERROR));
+        ], \JSON_THROW_ON_ERROR));
 
         static::assertSame('unknown', $recoveryManager->getCurrentShopwareVersion($tmpDir));
     }
@@ -99,12 +104,12 @@ class RecoveryManagerTest extends TestCase
 
         static::assertFalse($recoveryManager->isFlexProject(__DIR__));
 
-        $tmpDir = \sys_get_temp_dir() . '/' . \uniqid('shopware', true);
+        $tmpDir = sys_get_temp_dir().'/'.uniqid('shopware', true);
 
         $fs = new Filesystem();
 
         $fs->mkdir($tmpDir);
-        $fs->dumpFile($tmpDir . '/symfony.lock', json_encode([], JSON_THROW_ON_ERROR));
+        $fs->dumpFile($tmpDir.'/symfony.lock', json_encode([], \JSON_THROW_ON_ERROR));
 
         static::assertTrue($recoveryManager->isFlexProject($tmpDir));
     }
@@ -124,21 +129,21 @@ class RecoveryManagerTest extends TestCase
     {
         $fs->mkdir($tmpDir);
 
-        $_SERVER['SCRIPT_FILENAME'] = $tmpDir . '/shopware-recovery.phar.php';
+        $_SERVER['SCRIPT_FILENAME'] = $tmpDir.'/shopware-recovery.phar.php';
 
-        $fs->dumpFile($tmpDir . '/composer.json', json_encode([
+        $fs->dumpFile($tmpDir.'/composer.json', json_encode([
             'require' => [
                 'shopware/core' => '6.4.10.0',
             ],
-        ], JSON_THROW_ON_ERROR));
+        ], \JSON_THROW_ON_ERROR));
 
-        $fs->dumpFile($tmpDir . '/composer.lock', json_encode([
+        $fs->dumpFile($tmpDir.'/composer.lock', json_encode([
             'packages' => [
                 [
                     'name' => 'shopware/core',
                     'version' => '6.4.10.0',
-                ]
+                ],
             ],
-        ], JSON_THROW_ON_ERROR));
+        ], \JSON_THROW_ON_ERROR));
     }
 }

@@ -27,10 +27,11 @@ class RecoveryManager
     {
         /** @var string $fileName */
         $fileName = $_SERVER['SCRIPT_FILENAME'];
+
         return \dirname($fileName);
     }
 
-    public function getShopwareLocation(): string|bool
+    public function getShopwareLocation(): string
     {
         $projectDir = $this->getProjectDir();
 
@@ -51,7 +52,7 @@ class RecoveryManager
             }
         }
 
-        return false;
+        throw new \RuntimeException('Could not find Shopware installation');
     }
 
     public function getCurrentShopwareVersion(string $shopwarePath): string

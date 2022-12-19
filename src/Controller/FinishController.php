@@ -14,13 +14,15 @@ class FinishController extends AbstractController
     #[Route('/finish', name: 'finish', defaults: ['step' => 3])]
     public function default(Request $request): Response
     {
-        if ($request->getMethod() === Request::METHOD_POST) {
+        // @codeCoverageIgnoreStart
+        if (Request::METHOD_POST === $request->getMethod()) {
             $self = $_SERVER['SCRIPT_FILENAME'];
             \assert(\is_string($self));
             unlink($self);
 
-            return new RedirectResponse($request->getBasePath() . '/admin');
+            return new RedirectResponse($request->getBasePath().'/admin');
         }
+        // @codeCoverageIgnoreEnd
 
         return $this->render('finish.html.twig');
     }

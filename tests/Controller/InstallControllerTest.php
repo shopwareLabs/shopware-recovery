@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
@@ -19,27 +20,10 @@ use Twig\Environment;
  */
 class InstallControllerTest extends TestCase
 {
-    public function testStartPageRedirectsOnExistingInstallation(): void
+    public function testStartPage(): void
     {
         $recovery = $this->createMock(RecoveryManager::class);
         $recovery->method('getShopwareLocation')->willReturn('asd');
-
-        $responseGenerator = $this->createMock(StreamedCommandResponseGenerator::class);
-        $responseGenerator->method('runJSON')->willReturn(new StreamedResponse());
-
-        $controller = new InstallController($recovery, $responseGenerator);
-        $controller->setContainer($this->getContainer());
-
-        $response = $controller->index();
-
-        static::assertSame(Response::HTTP_FOUND, $response->getStatusCode());
-        static::assertSame('index', $response->headers->get('Location'));
-    }
-
-    public function testStartPageRedirect(): void
-    {
-        $recovery = $this->createMock(RecoveryManager::class);
-        $recovery->method('getShopwareLocation')->willReturn(false);
 
         $responseGenerator = $this->createMock(StreamedCommandResponseGenerator::class);
         $responseGenerator->method('runJSON')->willReturn(new StreamedResponse());
