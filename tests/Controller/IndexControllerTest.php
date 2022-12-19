@@ -9,6 +9,9 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Router;
 
+/**
+ * @covers \App\Controller\IndexController
+ */
 class IndexControllerTest extends TestCase
 {
     public function testIndexRedirectsToInstall(): void

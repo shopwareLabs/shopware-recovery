@@ -24,7 +24,7 @@ class InstallController extends AbstractController
     public function index(): Response
     {
         // Check if Shopware is already installed
-        if (is_bool($this->recoveryManager->getShopwareLocation())) {
+        if (!is_bool($this->recoveryManager->getShopwareLocation())) {
             return $this->redirectToRoute('index');
         }
 

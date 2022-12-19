@@ -6,6 +6,9 @@ use App\Services\StreamedCommandResponseGenerator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 
+/**
+ * @covers \App\Services\StreamedCommandResponseGenerator
+ */
 class StreamedCommandResponseGeneratorTest extends TestCase
 {
     public function testRun(): void
