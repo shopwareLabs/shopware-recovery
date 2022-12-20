@@ -47,7 +47,7 @@ if ('cli' === PHP_SAPI || !isset($_SERVER['REQUEST_URI'])) {
         }
 
         if (!empty($url) && is_file('phar://' . __FILE__ . '/public/' . $url)) {
-            return '/public' . $url;
+            return '/src/Resources/public' . $url;
         }
 
         return 'index.php';
