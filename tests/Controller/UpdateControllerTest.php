@@ -258,6 +258,49 @@ class UpdateControllerTest extends TestCase
         ];
     }
 
+    public function testResetConfig(): void
+    {
+        $recoveryManager = $this->createMock(RecoveryManager::class);
+
+        $recoveryManager->method('getShopwareLocation')->willReturn('/path/to/shopware');
+        $recoveryManager->method('getCurrentShopwareVersion')->willReturn('6.4.17.0');
+        $recoveryManager->method('getPHPBinary')->willReturn('/usr/bin/php');
+        $recoveryManager->method('getBinary')->willReturn('/var/www/shopware-recovery.phar');
+
+        $responseGenerator = $this->createMock(StreamedCommandResponseGenerator::class);
+        $responseGenerator
+            ->expects(static::once())
+            ->method('runJSON')
+            ->with([
+                '/usr/bin/php',
+                '/var/www/shopware-recovery.phar',
+                'composer',
+                '-d',
+                '/path/to/shopware',
+                'symfony:recipes:install',
+                '--force',
+                '--reset',
+                '--no-interaction',
+                '--no-ansi',
+                '-v',
+            ])
+            ->willReturn(new StreamedResponse());
+
+        $controller = new UpdateController(
+            $recoveryManager,
+            $this->createMock(ReleaseInfoProvider::class),
+            $this->createMock(FlexMigrator::class),
+            $responseGenerator,
+        );
+        $controller->setContainer($this->getContainer());
+
+        $request = new Request();
+        $request->setSession(new Session(new MockArraySessionStorage()));
+        $response = $controller->resetConfig($request);
+
+        static::assertInstanceOf(StreamedResponse::class, $response);
+    }
+
     private function getContainer(): ContainerInterface
     {
         $container = new Container();

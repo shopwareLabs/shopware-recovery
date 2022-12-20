@@ -38,7 +38,7 @@ if (installButton) {
 
         installButton.disabled = true;
 
-        const installResponse = await fetch(`${baseUrl}/install/_run`);
+        const installResponse = await fetch(`${baseUrl}/install/_run`, {method: 'POST'});
 
         const result = await tailLog(installResponse, installLogOutput);
         if (result.newLocation) {
@@ -59,7 +59,7 @@ if (updateButton) {
         updateButton.disabled = true;
         updateLogCard.style.removeProperty('display');
 
-        const prepareUpdate = await fetch(`${baseUrl}/update/_prepare`)
+        const prepareUpdate = await fetch(`${baseUrl}/update/_prepare`, {method: 'POST'})
         if (prepareUpdate.status !== 200) {
             updateLogOutput.innerHTML += 'Failed to prepare update' + "\n"
             return;
@@ -70,9 +70,9 @@ if (updateButton) {
         if (!isFlexProject) {
             updateLogOutput.innerHTML += 'Updating to Flex Project' + "\n"
 
-            const migrate = await fetch(`${baseUrl}/update/_migrate-template`)
+            const migrate = await fetch(`${baseUrl}/update/_migrate-template`, {method: 'POST'})
 
-            if (migrate.status !== 200) {
+            if (migrate.status !== 204) {
                 updateLogOutput.innerHTML += 'Failed to update to Flex Project' + "\n"
                 updateLogCard.innerHTML += await migrate.text();
                 return;
@@ -81,11 +81,20 @@ if (updateButton) {
             }
         }
 
-        const updateRun = await fetch(`${baseUrl}/update/_run`);
+        const updateRun = await fetch(`${baseUrl}/update/_run`, {method: 'POST'});
 
         await tailLog(updateRun, updateLogOutput);
 
-        const finishUpdate = await fetch(`${baseUrl}/update/_finish`)
+        const resetConfig = await fetch(`${baseUrl}/update/_reset_config`, {method: 'POST'});
+
+        if (resetConfig.status !== 200) {
+            updateLogOutput.innerHTML += 'Failed to update config files' + "\n"
+            updateLogOutput.innerHTML += await resetConfig.text();
+        } else {
+            await tailLog(resetConfig, updateLogOutput);
+        }
+
+        const finishUpdate = await fetch(`${baseUrl}/update/_finish`, {method: 'POST'})
         if (finishUpdate.status !== 200) {
             updateLogOutput.innerHTML += 'Failed to prepare update' + "\n"
             updateLogOutput.innerHTML += await finishUpdate.text();

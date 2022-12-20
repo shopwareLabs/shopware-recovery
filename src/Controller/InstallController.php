@@ -26,7 +26,7 @@ class InstallController extends AbstractController
         return $this->render('install.html.twig');
     }
 
-    #[Route('/install/_run', name: 'install_run')]
+    #[Route('/install/_run', name: 'install_run', methods: ['POST'])]
     public function run(Request $request): StreamedResponse
     {
         $finish = function (Process $process) use ($request): void {

@@ -22,7 +22,7 @@ class UpdateController extends AbstractController
     ) {
     }
 
-    #[Route('/update', name: 'update', defaults: ['step' => 2])]
+    #[Route('/update', name: 'update', defaults: ['step' => 2], methods: ['GET'])]
     public function index(Request $request): Response
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
@@ -42,7 +42,7 @@ class UpdateController extends AbstractController
         ]);
     }
 
-    #[Route('/update/_migrate-template', name: 'migrate-template')]
+    #[Route('/update/_migrate-template', name: 'migrate-template', methods: ['POST'])]
     public function migrateTemplate(): Response
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
@@ -55,7 +55,7 @@ class UpdateController extends AbstractController
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/update/_run', name: 'update_run')]
+    #[Route('/update/_run', name: 'update_run', methods: ['POST'])]
     public function run(Request $request): Response
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
@@ -77,7 +77,27 @@ class UpdateController extends AbstractController
         ]);
     }
 
-    #[Route('/update/_prepare', name: 'update_prepare')]
+    #[Route('/update/_reset_config', name: 'update_reset_config', methods: ['POST'])]
+    public function resetConfig(Request $request): Response
+    {
+        $shopwarePath = $this->recoveryManager->getShopwareLocation();
+
+        return $this->streamedCommandResponseGenerator->runJSON([
+            $this->recoveryManager->getPhpBinary($request),
+            $this->recoveryManager->getBinary(),
+            'composer',
+            '-d',
+            $shopwarePath,
+            'symfony:recipes:install',
+            '--force',
+            '--reset',
+            '--no-interaction',
+            '--no-ansi',
+            '-v'
+        ]);
+    }
+
+    #[Route('/update/_prepare', name: 'update_prepare', methods: ['POST'])]
     public function prepare(Request $request): Response
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
@@ -90,7 +110,7 @@ class UpdateController extends AbstractController
         ]);
     }
 
-    #[Route('/update/_finish', name: 'update_finish')]
+    #[Route('/update/_finish', name: 'update_finish', methods: ['POST'])]
     public function finish(Request $request): Response
     {
         $shopwarePath = $this->recoveryManager->getShopwareLocation();
