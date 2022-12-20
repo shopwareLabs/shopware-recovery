@@ -46,7 +46,7 @@
   ];
 
   scripts.build-phar.exec = ''
-    ${pkgs.php81Packages.box}/bin/box compile
+    composer run build-phar
     mkdir -p shop/public
     mv shopware-recovery.phar shop/public/shopware-recovery.phar.php
   '';

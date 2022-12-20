@@ -1,0 +1,25 @@
+{
+  "name": "shopware-recovery",
+  "version": "1.0.0",
+  "description": "## Experiment",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shopwareLabs/shopware-recovery.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shopwareLabs/shopware-recovery/issues"
+  },
+  "homepage": "https://github.com/shopwareLabs/shopware-recovery#readme",
+  "devDependencies": {
+    "cypress": "^12.1.0"
+  }
+}

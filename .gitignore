@@ -10,6 +10,9 @@ devenv.local.nix
 /shop
 /backup.zip
 /shopware.sql
+/install.zip
 /update.zip
 
 .phpunit.cache
+/node_modules
+vendor-bin/*/vendor
